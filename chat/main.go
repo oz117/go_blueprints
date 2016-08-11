@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+	// Handle request arriving on /
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`
       <html>
@@ -18,6 +19,7 @@ func main() {
       </html>
       `))
 	})
+	// Start a webserver on 8080
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
