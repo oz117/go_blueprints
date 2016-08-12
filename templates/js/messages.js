@@ -15,7 +15,7 @@ $(function(){
   if (!window["WebSocket"]) {
     alert("Error: Your browser does not support web sockets.")
   } else {
-    socket = new WebSocket("ws://127.0.0.1:8080/room");
+    socket = new WebSocket("ws://"+document.location.host+"/room");
     socket.onclose = function() {
       alert("Connection has been closed.");
     }
