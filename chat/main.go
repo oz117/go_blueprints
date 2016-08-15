@@ -5,10 +5,13 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/go_blueprints/chat/client"
+	"github.com/go_blueprints/chat/trace"
 )
 
 type templateHandler struct {
@@ -27,8 +30,12 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var addr = flag.String("addr", ":8080", "Address of the application")
+	var verbose = flag.String("V", "false", "Display more information about what's going on")
 	flag.Parse()
 	r := client.NewRoom()
+	if strings.Compare(*verbose, "true") == 0 {
+		r.Tracer = trace.New(os.Stdout)
+	}
 	// Handle request arriving on /
 	http.Handle("/", &templateHandler{filename: "chat.html"})
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../templates/js"))))
