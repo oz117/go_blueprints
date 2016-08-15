@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/go_blueprints/chat/trace"
 	"github.com/gorilla/websocket"
 )
 
@@ -22,6 +23,8 @@ type Room struct {
 	join    chan *client
 	leave   chan *client
 	clients map[*client]bool
+	// To help debug and understand what's going on inside the room
+	Tracer trace.Tracer
 }
 
 // NewRoom creates a room
@@ -43,16 +46,22 @@ func (r *Room) Run() {
 		select {
 		case client := <-r.join:
 			r.clients[client] = true
+			r.Tracer.Trace("A new client has joined the room")
 		case client := <-r.leave:
 			delete(r.clients, client)
 			close(client.send)
+			r.Tracer.Trace("A client has left the room")
 		case msg := <-r.forward:
+			r.Tracer.Trace("Message received: [", string(msg), "]")
+			// Forward a message to all clients
 			for client := range r.clients {
 				select {
 				case client.send <- msg:
+					r.Tracer.Trace(" -- sent to client")
 				default:
 					delete(r.clients, client)
 					close(client.send)
+					r.Tracer.Trace(" -- failed to send, cleaned up client")
 				}
 			}
 		}
