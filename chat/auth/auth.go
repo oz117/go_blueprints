@@ -17,7 +17,7 @@ func (h *authHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-// MusthAuth simply creates an authHandler structure
-func MusthAuth(handler http.Handler) http.Handler {
+// MustAuth simply creates an authHandler structure
+func MustAuth(handler http.Handler) http.Handler {
 	return &authHandler{next: handler}
 }
