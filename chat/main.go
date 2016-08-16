@@ -10,6 +10,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/go_blueprints/chat/auth"
 	"github.com/go_blueprints/chat/client"
 	"github.com/go_blueprints/chat/trace"
 )
@@ -37,7 +38,7 @@ func main() {
 		r.Tracer = trace.New(os.Stdout)
 	}
 	// Handle request arriving on /
-	http.Handle("/", &templateHandler{filename: "chat.html"})
+	http.Handle("/", auth.MustAuth(&templateHandler{filename: "chat.html"}))
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../templates/js"))))
 	http.Handle("/room", r)
 	go r.Run()
