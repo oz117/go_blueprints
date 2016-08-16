@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/go_blueprints/chat/trace"
+	"github.com/go_blueprints/chapter_1/chat/trace"
 	"github.com/gorilla/websocket"
 )
 
