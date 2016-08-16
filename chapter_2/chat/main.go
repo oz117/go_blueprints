@@ -39,6 +39,7 @@ func main() {
 	}
 	// Handle request arriving on /
 	http.Handle("/", auth.MustAuth(&templateHandler{filename: "chat.html"}))
+	http.Handle("/login", &templateHandler{filename: "login.html"})
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../templates/js"))))
 	http.Handle("/room", r)
 	go r.Run()
