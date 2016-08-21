@@ -42,6 +42,7 @@ func main() {
 	http.Handle("/login", &templateHandler{filename: "login.html"})
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../templates/js"))))
 	http.Handle("/room", r)
+	http.HandleFunc("/auth/", auth.LoginHandler)
 	go r.Run()
 	log.Printf("Starting web server on [%s]", *addr)
 	// Start a webserver on 8080
