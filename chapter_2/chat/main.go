@@ -13,6 +13,9 @@ import (
 	"github.com/go_blueprints/chapter_2/chat/auth"
 	"github.com/go_blueprints/chapter_2/chat/client"
 	"github.com/go_blueprints/chapter_2/chat/trace"
+	"github.com/stretchr/gomniauth"
+	"github.com/stretchr/gomniauth/providers/google"
+	"github.com/stretchr/signature"
 )
 
 type templateHandler struct {
@@ -33,6 +36,11 @@ func main() {
 	var addr = flag.String("addr", ":8080", "Address of the application")
 	var verbose = flag.String("V", "false", "Display more information about what's going on")
 	flag.Parse()
+	gomniauth.SetSecurityKey(signature.RandomKey(64))
+	gomniauth.WithProviders(
+		google.New("id",
+			"your_key", "http://localhost:8080/auth/callback/google"),
+	)
 	r := client.NewRoom()
 	if strings.Compare(*verbose, "true") == 0 {
 		r.Tracer = trace.New(os.Stdout)
