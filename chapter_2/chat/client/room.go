@@ -6,6 +6,7 @@ import (
 
 	"github.com/go_blueprints/chapter_1/chat/trace"
 	"github.com/gorilla/websocket"
+	"github.com/stretchr/objx"
 )
 
 const (
@@ -19,7 +20,7 @@ var upgrader = &websocket.Upgrader{ReadBufferSize: socketBufferSize,
 // Room represents a chat room
 type Room struct {
 	// Channel that contains the data to be forwarded to all the clients
-	forward chan []byte
+	forward chan *message
 	join    chan *client
 	leave   chan *client
 	clients map[*client]bool
@@ -30,7 +31,7 @@ type Room struct {
 // NewRoom creates a room
 func NewRoom() *Room {
 	return &Room{
-		forward: make(chan []byte),
+		forward: make(chan *message),
 		join:    make(chan *client),
 		leave:   make(chan *client),
 		clients: make(map[*client]bool),
@@ -53,7 +54,7 @@ func (r *Room) Run() {
 			close(client.send)
 			r.Tracer.Trace("A client has left the room")
 		case msg := <-r.forward:
-			r.Tracer.Trace("Message received: [", string(msg), "]")
+			r.Tracer.Trace("Message received: [", msg.Message, "]")
 			// Forward a message to all clients
 			for client := range r.clients {
 				select {
@@ -75,10 +76,16 @@ func (r *Room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		log.Fatal("ServeHTTP: ", err)
 		return
 	}
+	authCookie, err := req.Cookie("auth")
+	if err != nil {
+		log.Fatal("Failed to get auth cookie")
+		return
+	}
 	client := &client{
-		socket: socket,
-		send:   make(chan []byte, messageBufferSize),
-		room:   r,
+		socket:   socket,
+		send:     make(chan *message, messageBufferSize),
+		room:     r,
+		userData: objx.MustFromBase64(authCookie.Value),
 	}
 	r.join <- client
 	defer func() { r.leave <- client }()
