@@ -25,6 +25,13 @@ type templateHandler struct {
 	templ    *template.Template
 }
 
+// Will use this later (maybe)
+type provider struct {
+	id       string
+	key      string
+	callback string
+}
+
 func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func() {
 		t.templ = template.Must(template.ParseFiles(filepath.Join("../templates",
