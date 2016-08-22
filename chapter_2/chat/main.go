@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"html/template"
 	"log"
@@ -25,11 +26,10 @@ type templateHandler struct {
 	templ    *template.Template
 }
 
-// Will use this later (maybe)
 type provider struct {
-	id       string
-	key      string
-	callback string
+	Id       string `json:"id"`
+	Secret   string `json:"secret"`
+	Callback string `json:"callback"`
 }
 
 func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -46,14 +46,32 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.templ.Execute(w, data)
 }
 
+// This function searches for the configuration in /tmp/ and sets the params
+// for the provider
+func getProviderConfig() (p *provider, err error) {
+	file, err := os.Open("/tmp/config.json")
+	if err != nil {
+		return
+	}
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&p)
+	if err != nil {
+		return
+	}
+	return
+}
+
 func main() {
 	var addr = flag.String("addr", ":8080", "Address of the application")
 	var verbose = flag.String("V", "false", "Display more information about what's going on")
 	flag.Parse()
+	p, err := getProviderConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
 	gomniauth.SetSecurityKey(signature.RandomKey(64))
 	gomniauth.WithProviders(
-		google.New("id",
-			"your_key", "http://localhost:8080/auth/callback/google"),
+		google.New(p.Id, p.Secret, p.Callback),
 	)
 	r := client.NewRoom()
 	if strings.Compare(*verbose, "true") == 0 {
