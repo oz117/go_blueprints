@@ -71,9 +71,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			"avatar_url": user.AvatarURL(),
 		}).MustBase64()
 		http.SetCookie(w, &http.Cookie{
-			Name:  "auth",
-			Value: authCookieValue,
-			Path:  "/",
+			Name:   "auth",
+			Value:  authCookieValue,
+			Path:   "/",
+			MaxAge: 3600,
 		})
 		w.Header().Set("Location", "/chat")
 		w.WriteHeader(http.StatusTemporaryRedirect)
