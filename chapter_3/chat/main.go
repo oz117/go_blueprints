@@ -65,6 +65,7 @@ func main() {
 	http.Handle("/login", &templateHandler{filename: "login.html"})
 	http.HandleFunc("/logout", auth.Logout)
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../templates/js"))))
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("../templates/css"))))
 	http.Handle("/room", r)
 	http.HandleFunc("/auth/", auth.LoginHandler)
 	go r.Run()
