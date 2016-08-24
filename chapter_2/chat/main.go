@@ -10,9 +10,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/go_blueprints/chapter_1/chat/client"
-	"github.com/go_blueprints/chapter_1/chat/trace"
 	"github.com/go_blueprints/chapter_2/chat/auth"
+	"github.com/go_blueprints/chapter_2/chat/client"
+	"github.com/go_blueprints/chapter_2/chat/trace"
 	"github.com/go_blueprints/chapter_2/chat/utils"
 	"github.com/stretchr/gomniauth"
 	"github.com/stretchr/gomniauth/providers/google"
