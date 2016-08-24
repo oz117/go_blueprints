@@ -60,14 +60,15 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		creds, err := provider.CompleteAuth(objx.MustFromURLQuery(r.URL.RawQuery))
 		if err != nil {
-			log.Fatalln("Error when trying to complte auth for", provider, "-", err)
+			log.Fatalln("Error when trying to complete auth for", provider, "-", err)
 		}
 		user, err := provider.GetUser(creds)
 		if err != nil {
 			log.Fatalln("Error when trying to get user from", provider, "-", err)
 		}
 		authCookieValue := objx.New(map[string]interface{}{
-			"name": user.Name(),
+			"name":       user.Name(),
+			"avatar_url": user.AvatarURL(),
 		}).MustBase64()
 		http.SetCookie(w, &http.Cookie{
 			Name:  "auth",
