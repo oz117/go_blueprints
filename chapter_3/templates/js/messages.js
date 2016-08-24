@@ -24,11 +24,10 @@ $(function(){
       var msg = eval("(" + e.data + ")");
       messages.append(
         $("<li>").append(
-          $("<img>").css({
+          $("<img>").attr("title", msg.Name).css({
             width: 50,
             verticalAlign: "middle"
           }).attr("src", msg.AvatarURL),
-          $("<strong>").text(msg.Name + ": "),
           $("<span>").text(msg.Message)
         )
       );
