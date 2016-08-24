@@ -63,6 +63,7 @@ func main() {
 	// Handle request arriving on /
 	http.Handle("/", auth.MustAuth(&templateHandler{filename: "chat.html"}))
 	http.Handle("/login", &templateHandler{filename: "login.html"})
+	http.HandleFunc("/logout", auth.Logout)
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../templates/js"))))
 	http.Handle("/room", r)
 	http.HandleFunc("/auth/", auth.LoginHandler)
