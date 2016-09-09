@@ -36,6 +36,9 @@ func (_ AuthAvatar) GetAvatarURL(c *client) (string, error) {
 	return "", ErrNoAvatarURL
 }
 
+// UseGravatarAvatar select gravatar as source for the avatar
+var UseGravatarAvatar GravatarAvatar
+
 // GetAvatarURL returns the url of the avatar given by gravatar
 func (_ GravatarAvatar) GetAvatarURL(c *client) (string, error) {
 	if email, ok := c.userData["email"]; ok {
