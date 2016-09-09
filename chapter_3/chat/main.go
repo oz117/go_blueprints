@@ -46,7 +46,7 @@ func main() {
 
 	flag.Parse()
 	config := utils.NewConfiguration()
-	r := client.NewRoom()
+	r := client.NewRoom(client.UseAuthAvatar)
 	if strings.Compare(*verbose, "true") == 0 {
 		r.Tracer = trace.New(os.Stdout)
 		config.Tracer = trace.New(os.Stdout)

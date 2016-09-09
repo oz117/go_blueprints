@@ -1,6 +1,7 @@
 package client
 
 import (
+	"log"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -20,9 +21,11 @@ func (c *client) read() {
 		if err := c.socket.ReadJSON(&msg); err == nil {
 			msg.When = time.Now()
 			msg.Name = c.userData["name"].(string)
-			if avatarURL, ok := c.userData["avatar_url"]; ok {
-				msg.AvatarURL = avatarURL.(string)
+			avatarURL, err := c.room.avatar.GetAvatarURL(c)
+			if err != nil {
+				log.Println("No avatar url found")
 			}
+			msg.AvatarURL = avatarURL
 			c.room.forward <- msg
 		} else {
 			break

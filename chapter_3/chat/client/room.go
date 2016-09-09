@@ -26,16 +26,18 @@ type Room struct {
 	clients map[*client]bool
 	// To help debug and understand what's going on inside the room
 	Tracer trace.Tracer
+	avatar Avatar
 }
 
 // NewRoom creates a room
-func NewRoom() *Room {
+func NewRoom(avatar Avatar) *Room {
 	return &Room{
 		forward: make(chan *message),
 		join:    make(chan *client),
 		leave:   make(chan *client),
 		clients: make(map[*client]bool),
 		Tracer:  trace.Off(),
+		avatar:  avatar,
 	}
 }
 
