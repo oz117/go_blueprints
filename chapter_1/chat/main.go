@@ -10,8 +10,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/go_blueprints/chapter_1/chat/client"
-	"github.com/go_blueprints/chapter_1/chat/trace"
+	"github.com/oz117/go_blueprints/chapter_1/chat/client"
+	"github.com/oz117/go_blueprints/chapter_1/chat/trace"
 )
 
 type templateHandler struct {

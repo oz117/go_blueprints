@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/go_blueprints/chapter_2/chat/trace"
+	"github.com/oz117/go_blueprints/chapter_2/chat/trace"
 )
 
 // Configuration is a simple struct that contains a Tracer to allow the display
