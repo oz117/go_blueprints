@@ -1,12 +1,6 @@
 package client
 
-import (
-	"crypto/md5"
-	"errors"
-	"fmt"
-	"io"
-	"strings"
-)
+import "errors"
 
 // ErrNoAvatarURL displayed when there is no avatar
 var ErrNoAvatarURL = errors.New("Chat: unable to get an avatar URL.")
@@ -41,11 +35,9 @@ var UseGravatarAvatar GravatarAvatar
 
 // GetAvatarURL returns the url of the avatar given by gravatar
 func (_ GravatarAvatar) GetAvatarURL(c *client) (string, error) {
-	if email, ok := c.userData["email"]; ok {
-		if emailStr, ok := email.(string); ok {
-			m := md5.New()
-			io.WriteString(m, strings.ToLower(emailStr))
-			return fmt.Sprintf("//gravatar.com/avatar/%x", m.Sum(nil)), nil
+	if userId, ok := c.userData["userId"]; ok {
+		if userIdStr, ok := userId.(string); ok {
+			return "//gravatar.com/avatar/" + userIdStr, nil
 		}
 	}
 	return "", ErrNoAvatarURL
