@@ -16,6 +16,8 @@ type AuthAvatar struct{}
 // GravatarAvatar will contain the link given by gravatar
 type GravatarAvatar struct{}
 
+type FileSystemAvatar struct{}
+
 // UseAuthAvatar for later
 var UseAuthAvatar AuthAvatar
 
@@ -38,6 +40,17 @@ func (_ GravatarAvatar) GetAvatarURL(c *client) (string, error) {
 	if userId, ok := c.userData["userId"]; ok {
 		if userIdStr, ok := userId.(string); ok {
 			return "//gravatar.com/avatar/" + userIdStr, nil
+		}
+	}
+	return "", ErrNoAvatarURL
+}
+
+var UseFileSystemAvatar FileSystemAvatar
+
+func (_ FileSystemAvatar) GetAvatarURL(c *client) (string, error) {
+	if userId, ok := c.userData["userId"]; ok {
+		if userIdStr, ok := userId.(string); ok {
+			return "/avatars/" + userIdStr + ".jpg", nil
 		}
 	}
 	return "", ErrNoAvatarURL
