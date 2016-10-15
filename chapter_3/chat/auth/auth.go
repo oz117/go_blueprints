@@ -69,6 +69,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatalln("Error when trying to get user from", provider, "-", err)
 		}
+		// Transformation of the userName in md5 so we can identify users
+		// more easily. Also to facilitate the avatar upload part
 		m := md5.New()
 		io.WriteString(m, strings.ToLower(user.Name()))
 		userId := fmt.Sprintf("%x", m.Sum(nil))
